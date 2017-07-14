@@ -17,27 +17,7 @@ public class Sketcher {
     public static void main(String[] args) {
         // TODO code application logic here
         //new Window();
-        new Window_alt();
-        Rectangle rect = (l, w) -> { l*=2; w*=3; return l * w; };
-        //System.out.println("Flaeche: " + rect.getArea(4, 3));
-        Fib f = (n) -> {
-            return n; //To change body of generated lambdas, choose Tools | Templates.
-        };
-        Calc calc = (a, b) -> {
-            return a * b; //To change body of generated lambdas, choose Tools | Templates.
-        };
-       
-        System.out.println("9 * 7 = " + calc.mul(9, 7));
+        new Window();
+    }
 
-    }
-    interface Rectangle {
-        public double getArea(double length, double width);
-    }
-    interface Fib{
-        public int getFib(int n);
-    }
-    interface Calc{
-        public double mul(int a, int b);
-    }
-    
 }

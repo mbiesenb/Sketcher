@@ -66,8 +66,7 @@ public class Line implements Drawable {
     }
 
     @Override
-    public void drawme(Graphics2D g3d) {
-        Graphics2D g2d = (Graphics2D) sp.getGraphics();
+    public void drawme(Graphics2D g2d) {
         Color temp = g2d.getColor();
         g2d.setColor(color);
         //g2d.setStroke(new BasicStroke(thickness));

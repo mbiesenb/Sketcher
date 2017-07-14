@@ -31,7 +31,7 @@ public class BackgroundDraw extends Thread {
             //System.out.println("sketcher.BackgroundDraw.drawme()");
             _item.drawme(g2d);
         });
-        g2d.fillOval(0, 0, 100, 100);
+        //g2d.fillOval(0, 0, 100, 100);
         //System.out.println("sketcher.BackgroundDraw.drawme()");
     }
 

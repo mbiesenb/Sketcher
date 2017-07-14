@@ -6,12 +6,23 @@
 package sketcher;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 /**
@@ -27,6 +38,9 @@ public class SketchPanel extends JPanel {
     private Line currentLine = new Line();
     private int currentThickness = 5;
     private Color currentColor = Color.BLACK;
+    private BackgroundDraw backgroundDraw = null;
+    private Window window;
+    private BufferedImage bimage;
 
     public Color getCurrentColor() {
         return currentColor;
@@ -44,14 +58,19 @@ public class SketchPanel extends JPanel {
         this.currentThickness = currentThickness;
     }
 
-    public SketchPanel() {
-        setIgnoreRepaint(true);
-        setBackground(Color.white);
-
+    public SketchPanel(Window window) {
+        this.window = window;
         initListener();
+        initImage(2000,2000);
         repaint();
-        initBackgroundThread();
 
+    }
+
+    public void fillImage() {
+        Graphics2D img2d = (Graphics2D) bimage.getGraphics();
+        for (Drawable d : drawables) {
+            d.drawme(img2d);
+        }
     }
 
     public ArrayList<Drawable> getDrawables() {
@@ -60,44 +79,10 @@ public class SketchPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-//        super.paintComponent(g);
-//        Graphics2D g2d = (Graphics2D) g;
-//        int performaceCounter = 0;
-//        Graphics2D g2d2 = (Graphics2D) g;
-//        for (Drawable d : drawables) {
-//            if (performaceCounter > 100) {
-//                return;
-//            }
-//            d.drawme(g2d);
-//            performaceCounter++;
-//        }
-        //super.paintComponent(g);
-        //g.setColor(Color.black);
-        //g.drawRect(0, 0, 100, 100);
-//        BackgroundDraw d = new BackgroundDraw(this);
-//        d.start();
-
-    }
-//    public void redraw(){
-//        Graphics2D  g2d = (Graphics2D) getGraphics();
-//        drawables.stream().map((d) -> {
-//            d.drawme(g2d);
-//            return d;
-//        }).forEachOrdered((_item) -> {
-//            ;
-//        });
-//    }
-    public void selfPaint(){
-        Graphics2D  g2d = (Graphics2D) getGraphics();
-        int performaceCounter = 0;
-        for (Drawable d : drawables) {
-            if (performaceCounter > 2) {
-                break;
-            }
-            d.drawme(g2d);
-            performaceCounter++;
-        }
-        
+        super.paintComponent(g);
+        g.setColor(Color.white);
+        fillImage();
+        g.drawImage(bimage, 0, 0, this);
     }
 
     private void initListener() {
@@ -128,24 +113,45 @@ public class SketchPanel extends JPanel {
                 currentLine.setFrom(e.getPoint());
             }
         });
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                System.out.println(getWidth());
+                System.out.println(getHeight());
+                initImage(getWidth(), getHeight());
+            }
+        });
     }
 
     private void appendLine() {
         Line addLine = new Line(currentLine.getFrom(), currentLine.getTo(), currentColor, getCurrentThickness());
         addLine.setSp(this);
-        drawables.add(0, addLine);
-        selfPaint();
+        drawables.add(addLine);
+        //selfPaint();
+        repaint();
 
     }
 
     public void clearAll() {
         drawables.clear();
+        initImage(getWidth(), getHeight());
+        repaint();
+
+    }
+
+    private void initImage(int width, int height) {
+        bimage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D img2d = (Graphics2D) bimage.getGraphics();
+        img2d.setColor(Color.white);
+        img2d.fillRect(0, 0, bimage.getWidth(), bimage.getHeight());
         repaint();
     }
-
-    private void initBackgroundThread() {
-        BackgroundDraw backgroundDraw = new BackgroundDraw(this);
-        backgroundDraw.start();
-    }
-
+//    private void initBackgroundThread() {
+//        if (backgroundDraw != null) {
+//            backgroundDraw.stop();
+//        }
+//        backgroundDraw = new BackgroundDraw(this);
+//        backgroundDraw.start();
+//
+//    }
 }
