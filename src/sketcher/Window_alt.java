@@ -8,6 +8,9 @@ package sketcher;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -34,6 +37,17 @@ public class Window_alt extends JFrame {
         this.add(sp, BorderLayout.CENTER);
         this.add(new OptionPanel(), BorderLayout.WEST);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addComponentListener(new ComponentAdapter() {
+
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // do stuff 
+                //sp.redraw();
+                //System.out.println(".componentResized()");
+            }
+
+            
+        });
 
     }
 
@@ -46,6 +60,7 @@ public class Window_alt extends JFrame {
 
         private JButton btn_fkt_1 = new JButton("Clear");
         private JButton btn_fkt_2 = new JButton("Rubber");
+        private JButton btn_fkt_3 = new JButton("Pen");
 
         public OptionPanel() {
             setBackground(Color.lightGray);
@@ -59,7 +74,8 @@ public class Window_alt extends JFrame {
             add(new JLabel(""));
             add(new JLabel("Funktionen"));
             add(btn_fkt_1);
-            add(btn_fkt_2);           
+            add(btn_fkt_2);
+            add(btn_fkt_3);
         }
 
         private void initListener() {
@@ -69,6 +85,7 @@ public class Window_alt extends JFrame {
             btn_size_4.addMouseListener(setSize(12));
             btn_fkt_1.addMouseListener(doFkt(1)); //clear
             btn_fkt_2.addMouseListener(doFkt(2));
+            btn_fkt_3.addMouseListener(doFkt(3));
         }
 
         private MouseListener setSize(int thickness) {
@@ -91,6 +108,9 @@ public class Window_alt extends JFrame {
                             break;
                         case 2:
                             sp.setCurrentColor(Color.white);
+                            break;
+                        case 3:
+                            sp.setCurrentColor(Color.black);
                             break;
                     }
                 }
