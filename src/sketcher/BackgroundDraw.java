@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+// image path C:\Users\Marvin\Desktop\progra\Java\Sketchers
 package sketcher;
 
 import java.awt.Graphics;

@@ -11,6 +11,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -41,6 +42,7 @@ public class SketchPanel extends JPanel {
     private BackgroundDraw backgroundDraw = null;
     private Window window;
     private BufferedImage bimage;
+    private BufferedImage backgroundImage = null;
 
     public Color getCurrentColor() {
         return currentColor;
@@ -61,18 +63,19 @@ public class SketchPanel extends JPanel {
     public SketchPanel(Window window) {
         this.window = window;
         initListener();
-        initImage(2000,2000);
+        initImage(2000, 2000);
         repaint();
 
     }
 
-    public void fillImage() {
-        //Graphics2D img2d = (Graphics2D) bimage.getGraphics();
-        /*for (Drawable d : drawables) {
+    public void fillImage() { // Attention hard job
+        Graphics2D img2d = (Graphics2D) bimage.getGraphics();
+        for (Drawable d : drawables) {
             d.drawme(img2d);
-        }*/
+        }
     }
-    private void drawLineToImage(Line line){
+
+    private void drawLineToImage(Line line) {
         Graphics2D img2d = (Graphics2D) bimage.getGraphics();
         line.drawme(img2d);
     }
@@ -140,6 +143,7 @@ public class SketchPanel extends JPanel {
     public void clearAll() {
         drawables.clear();
         initImage(getWidth(), getHeight());
+        showImage();
         repaint();
 
     }
@@ -149,6 +153,30 @@ public class SketchPanel extends JPanel {
         Graphics2D img2d = (Graphics2D) bimage.getGraphics();
         img2d.setColor(Color.white);
         img2d.fillRect(0, 0, bimage.getWidth(), bimage.getHeight());
+        repaint();
+    }
+
+    public void setBackgroundImage(String path) {
+        initImage(getWidth(), getHeight());
+        
+        try {
+            backgroundImage = ImageIO.read(new File(path)); // eventually C:\\ImageTest\\pic2.jpg
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        showImage();
+        
+    }
+    public void showImage(){
+        if(backgroundImage == null) throw new IllegalStateException();
+        Graphics2D img2d = (Graphics2D) bimage.getGraphics();
+        img2d.drawImage(backgroundImage, (int)(getWidth()/2) - backgroundImage.getWidth()/2, (int)(getHeight()/2) - backgroundImage.getHeight()/2, this);
+        fillImage();
+        repaint();
+    }
+    public void hideImage(){
+        initImage(getWidth(), getHeight());
+        fillImage();
         repaint();
     }
 //    private void initBackgroundThread() {

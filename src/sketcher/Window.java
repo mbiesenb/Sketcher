@@ -7,6 +7,8 @@ package sketcher;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -14,8 +16,12 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -56,9 +62,15 @@ public class Window extends JFrame {
         private JButton btn_fkt_2 = new JButton("Rubber");
         private JButton btn_fkt_3 = new JButton("Pen");
 
+        private JButton btn_file_load = new JButton("Laden");
+        private JButton btn_file_show = new JButton("Show");
+        private JButton btn_file_hide = new JButton("Hide");
+        private String imagePath = this.getClass().getResource("").getPath() + "/../../../Bilder/";
+        private JFileChooser filechooser = new JFileChooser(imagePath);
+
         public OptionPanel() {
             setBackground(Color.lightGray);
-            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            setLayout(new GridLayout(20, 1));
             initListener();
             add(new JLabel("Thickness"));
             add(btn_size_1);
@@ -71,6 +83,11 @@ public class Window extends JFrame {
             add(btn_fkt_2);
             add(btn_fkt_3);
             setVisible(true);
+            add(new JLabel(""));
+            add(new JLabel("Hintergrund"));
+            add(btn_file_load);
+            add(btn_file_show);
+            add(btn_file_hide);
             repaint();
         }
 
@@ -82,6 +99,9 @@ public class Window extends JFrame {
             btn_fkt_1.addMouseListener(doFkt(1)); //clear
             btn_fkt_2.addMouseListener(doFkt(2));
             btn_fkt_3.addMouseListener(doFkt(3));
+            btn_file_load.addMouseListener(bgOption(1));
+            btn_file_show.addMouseListener(bgOption(2));
+            btn_file_hide.addMouseListener(bgOption(3));
         }
 
         private MouseListener setSize(int thickness) {
@@ -110,6 +130,31 @@ public class Window extends JFrame {
                             break;
                     }
                 }
+            };
+        }
+
+        private MouseListener bgOption(int option) {
+            return new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    switch (option) {
+                        case 1:
+                            int ret = filechooser.showOpenDialog(null);
+                            if (ret == JFileChooser.APPROVE_OPTION) {
+
+                                String path = filechooser.getSelectedFile().getAbsolutePath();
+                                sp.setBackgroundImage(path);
+                            }
+                            break;
+                        case 2:
+                            sp.showImage();
+                            break;
+                        case 3:
+                            sp.hideImage();
+                            break;
+                    }
+                }
+
             };
         }
 
