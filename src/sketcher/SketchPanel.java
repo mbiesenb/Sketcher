@@ -67,10 +67,14 @@ public class SketchPanel extends JPanel {
     }
 
     public void fillImage() {
-        Graphics2D img2d = (Graphics2D) bimage.getGraphics();
-        for (Drawable d : drawables) {
+        //Graphics2D img2d = (Graphics2D) bimage.getGraphics();
+        /*for (Drawable d : drawables) {
             d.drawme(img2d);
-        }
+        }*/
+    }
+    private void drawLineToImage(Line line){
+        Graphics2D img2d = (Graphics2D) bimage.getGraphics();
+        line.drawme(img2d);
     }
 
     public ArrayList<Drawable> getDrawables() {
@@ -127,6 +131,7 @@ public class SketchPanel extends JPanel {
         Line addLine = new Line(currentLine.getFrom(), currentLine.getTo(), currentColor, getCurrentThickness());
         addLine.setSp(this);
         drawables.add(addLine);
+        drawLineToImage(addLine);
         //selfPaint();
         repaint();
 
