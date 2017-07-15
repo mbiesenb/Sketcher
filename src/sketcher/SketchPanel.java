@@ -6,12 +6,8 @@
 package sketcher;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -21,8 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -70,9 +64,9 @@ public class SketchPanel extends JPanel {
 
     public void fillImage() { // Attention hard job
         Graphics2D img2d = (Graphics2D) bimage.getGraphics();
-        for (Drawable d : drawables) {
+        drawables.forEach((d) -> {
             d.drawme(img2d);
-        }
+        });
     }
 
     private void drawLineToImage(Line line) {
@@ -87,8 +81,6 @@ public class SketchPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.white);
-        fillImage();
         g.drawImage(bimage, 0, 0, this);
     }
 
@@ -135,7 +127,6 @@ public class SketchPanel extends JPanel {
         addLine.setSp(this);
         drawables.add(addLine);
         drawLineToImage(addLine);
-        //selfPaint();
         repaint();
 
     }
@@ -179,12 +170,4 @@ public class SketchPanel extends JPanel {
         fillImage();
         repaint();
     }
-//    private void initBackgroundThread() {
-//        if (backgroundDraw != null) {
-//            backgroundDraw.stop();
-//        }
-//        backgroundDraw = new BackgroundDraw(this);
-//        backgroundDraw.start();
-//
-//    }
 }
